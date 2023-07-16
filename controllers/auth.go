@@ -14,11 +14,28 @@ type RegisterDTO struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type RegisterSuccessMessage struct {
+	Message string `json:"message" default:"registration success"`
+}
+
 type LoginDTO struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
+type LoginSuccessMessage struct {
+	Token string `json:"token"`
+}
+
+// Register 		godoc
+// @Summary 		register user
+// @Description 	register new user
+// @Tags			auth
+// @Accept 			json
+// @Produce 		json
+// @Param			Body body RegisterDTO true "User Info"
+// @Success 		200 {object} RegisterSuccessMessage
+// @Router 			/api/auth/register [post]
 func Register(c *gin.Context) {
 	var dto RegisterDTO
 	if err := c.ShouldBindJSON(&dto); err != nil {
@@ -36,9 +53,20 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "registration success"})
+	var successMsg RegisterSuccessMessage
+	successMsg.Message = "registration success"
+	c.JSON(http.StatusOK, successMsg)
 }
 
+// Login 			godoc
+// @Summary 		login
+// @Description 	login user
+// @Tags			auth
+// @Accept 			json
+// @Produce 		json
+// @Param			Body body LoginDTO true "User Info"
+// @Success 		200 {object} LoginSuccessMessage
+// @Router 			/api/auth/login [post]
 func Login(c *gin.Context) {
 	var dto LoginDTO
 	if err := c.ShouldBindJSON(&dto); err != nil {
@@ -56,9 +84,19 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	var successMsg LoginSuccessMessage
+	successMsg.Token = token
+	c.JSON(http.StatusOK, successMsg)
 }
 
+// GetUser 			godoc
+// @Summary 		user
+// @Description 	get user profile
+// @Tags			user
+// @Produce 		json
+// @Success 		200 {object} models.User
+// @Router 			/api/user [get]
+// @Security Bearer
 func CurrentUser(c *gin.Context) {
 	user_id, err := token.ExtractUserID(c)
 	if err != nil {

@@ -7,12 +7,13 @@ import (
 	"inheritence_management/middlewares"
 	"inheritence_management/models"
 
-	//docs "github.com/inheritence_management_backend/docs"
-	swaggerFiles "github.com/swaggo/files"
+	docs "inheritence_management/docs"
+
+	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Gin Swagger Example API
+// @title Inheritence Management
 // @version 1.0
 // @description This is a sample server server.
 // @termsOfService http://swagger.io/terms/
@@ -24,17 +25,22 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:3000
-// @BasePath /
-// @schemes http
+// @host localhost:8080
+// @BasePath /api
+
+// @securityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and JWT token.
 func main() {
 	models.ConnectDataBase()
 	r := gin.Default()
 
-	url := ginSwagger.URL("http://localhost:3000/swagger/doc.json") // The url pointing to API definition
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	docs.SwaggerInfo.BasePath = "/"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	auth := r.Group("/api/auth")
+	auth.Use(middlewares.CORSMiddleware())
 	auth.POST("/register", controllers.Register)
 	auth.POST("/login", controllers.Login)
 
