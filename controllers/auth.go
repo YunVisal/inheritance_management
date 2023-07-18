@@ -89,13 +89,13 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, successMsg)
 }
 
-// GetUser 			godoc
-// @Summary 		user
+// GetProfile 		godoc
+// @Summary 		profile
 // @Description 	get user profile
-// @Tags			user
+// @Tags			profile
 // @Produce 		json
 // @Success 		200 {object} models.User
-// @Router 			/api/user [get]
+// @Router 			/api/profile [get]
 // @Security Bearer
 func CurrentUser(c *gin.Context) {
 	user_id, err := token.ExtractUserID(c)

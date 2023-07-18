@@ -74,6 +74,24 @@ func GetUserByID(uid uint) (User, error) {
 	return u, nil
 }
 
+func GetUsers(key string) ([]User, error) {
+	var u []User
+	if key == "" {
+		if err := DB.Find(&u).Error; err != nil {
+			return []User{}, errors.New("No User in this system")
+		}
+	} else {
+		if err := DB.Where("username LIKE ?", key+"%").Find(&u).Error; err != nil {
+			return []User{}, errors.New("No User with this search term")
+		}
+	}
+
+	for i := 0; i < len(u); i++ {
+		u[i].PrepareGive()
+	}
+	return u, nil
+}
+
 func (u *User) PrepareGive() {
 	u.Password = ""
 }

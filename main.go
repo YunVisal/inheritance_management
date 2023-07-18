@@ -25,7 +25,8 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
+// host localhost:8080
+// @host 54.250.169.163
 // @BasePath /api
 
 // @securityDefinitions.apikey Bearer
@@ -46,7 +47,8 @@ func main() {
 
 	api := r.Group("/api")
 	api.Use(middlewares.JwtAuthMiddleware())
-	api.GET("/user", controllers.CurrentUser)
+	api.GET("/profile", controllers.CurrentUser)
+	api.GET("/user", controllers.GetAllUser)
 
 	r.Run(":8080")
 }

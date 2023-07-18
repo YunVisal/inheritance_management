@@ -93,7 +93,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user": {
+        "/api/profile": {
             "get": {
                 "security": [
                     {
@@ -105,14 +105,50 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "profile"
                 ],
-                "summary": "user",
+                "summary": "profile",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "get all users by search term",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search Term",
+                        "name": "term",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
                         }
                     }
                 }
@@ -204,7 +240,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "54.250.169.163",
 	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "Inheritence Management",

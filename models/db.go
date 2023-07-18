@@ -13,11 +13,15 @@ import (
 var DB *gorm.DB
 
 func ConnectDataBase() {
+	log.Print(os.Getenv("GO_ENV"))
+	print(os.Getenv("GO_ENV"))
+	var err error
+	if os.Getenv("GO_ENV") != "production" {
+		err = godotenv.Load()
 
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
+		if err != nil {
+			log.Fatalf("Error loading .env file")
+		}
 	}
 
 	Dbdriver := os.Getenv("DB_DRIVER")
