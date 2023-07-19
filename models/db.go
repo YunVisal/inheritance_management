@@ -13,8 +13,6 @@ import (
 var DB *gorm.DB
 
 func ConnectDataBase() {
-	log.Print(os.Getenv("GO_ENV"))
-	print(os.Getenv("GO_ENV"))
 	var err error
 	if os.Getenv("GO_ENV") != "production" {
 		err = godotenv.Load()
@@ -43,5 +41,6 @@ func ConnectDataBase() {
 	}
 
 	DB.AutoMigrate(&User{})
-
+	DB.AutoMigrate(&FamilyMember{})
+	DB.AutoMigrate(&Image{})
 }

@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  controllers.AddRelationshipDTO:
+    properties:
+      relativeId:
+        type: integer
+    required:
+    - relativeId
+    type: object
   controllers.LoginDTO:
     properties:
       password:
@@ -31,6 +38,47 @@ definitions:
         default: registration success
         type: string
     type: object
+  models.FamilyMember:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      relative:
+        $ref: '#/definitions/models.User'
+      relativeId:
+        type: integer
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+    type: object
+  models.FamilyMemberResponse:
+    properties:
+      id:
+        type: integer
+      relative_id:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Image:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+    type: object
   models.User:
     properties:
       createdAt:
@@ -46,7 +94,7 @@ definitions:
       username:
         type: string
     type: object
-host: 54.250.169.163
+host: 54.238.205.73
 info:
   contact:
     email: support@swagger.io
@@ -104,6 +152,83 @@ paths:
       summary: register user
       tags:
       - auth
+  /api/family:
+    get:
+      description: get family member
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.FamilyMemberResponse'
+            type: array
+      security:
+      - Bearer: []
+      summary: family member
+      tags:
+      - family
+    post:
+      consumes:
+      - application/json
+      description: add family member
+      parameters:
+      - description: Family member Info
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AddRelationshipDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FamilyMember'
+      security:
+      - Bearer: []
+      summary: family member
+      tags:
+      - family
+  /api/image:
+    get:
+      description: get upload image of user and family member
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Image'
+            type: array
+      security:
+      - Bearer: []
+      summary: image
+      tags:
+      - image
+    post:
+      description: upload image
+      parameters:
+      - description: file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Image'
+      security:
+      - Bearer: []
+      summary: image
+      tags:
+      - image
   /api/profile:
     get:
       description: get user profile

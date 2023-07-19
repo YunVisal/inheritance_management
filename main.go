@@ -25,8 +25,8 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// host localhost:8080
-// @host 54.250.169.163
+// @host localhost:8080
+// @host 54.238.205.73
 // @BasePath /api
 
 // @securityDefinitions.apikey Bearer
@@ -49,6 +49,17 @@ func main() {
 	api.Use(middlewares.JwtAuthMiddleware())
 	api.GET("/profile", controllers.CurrentUser)
 	api.GET("/user", controllers.GetAllUser)
+	api.GET("/family", controllers.GetRelationship)
+	api.POST("/family", controllers.AddRelationship)
+	api.GET("/image", controllers.GetImage)
+	api.POST("/image", controllers.UploadImage)
+
+	// sess := storage.ConnectAws()
+	// image := r.Group("/api/image")
+	// image.Use(func(c *gin.Context) {
+	// 	c.Set("sess", sess)
+	// 	c.Next()
+	// })
 
 	r.Run(":8080")
 }
