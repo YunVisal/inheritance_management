@@ -43,4 +43,5 @@ func ConnectDataBase() {
 	DB.AutoMigrate(&User{})
 	DB.AutoMigrate(&FamilyMember{})
 	DB.AutoMigrate(&Image{})
+	DB.AutoMigrate(&Package{})
 }

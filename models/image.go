@@ -9,8 +9,9 @@ import (
 
 type Image struct {
 	gorm.Model
-	ImageUrl string `gorm:"not null;unique" json:"imageUrl"`
-	UserId   int    `gorm:"not null;" json:"userId"`
+	ImageUrl  string `gorm:"size:1000;not null;unique" json:"imageUrl"`
+	UserId    int    `gorm:"not null;" json:"userId"`
+	PackageId string `gorm:"not null;" json:"packageId"`
 }
 
 type RelatedImage struct {
@@ -33,11 +34,10 @@ func GetImage(userId uint) ([]Image, error) {
 
 	var image []Image
 	if err := DB.Where("user_id = ?", userId).Find(&image).Error; err != nil {
-		return []Image{}, errors.New("User not found!")
+		return []Image{}, errors.New("No Image for this user")
 	}
 	res = append(res, image...)
 
-	log.Print(userId)
 	rows, err := DB.Table("images").Select("images.id, family_members.relative_id, images.image_url").Joins("left join family_members on images.user_id = family_members.relative_id").Where("family_members.user_id = ?", userId).Rows()
 	if err != nil {
 		return res, nil
@@ -55,4 +55,22 @@ func GetImage(userId uint) ([]Image, error) {
 	log.Print(res)
 
 	return res, nil
+}
+
+func GetImageByPackageId(userId uint, packageId string) ([]Image, error) {
+	var image []Image
+	if err := DB.Where("user_id = ? AND package_id = ?", userId, packageId).Find(&image).Error; err != nil {
+		return []Image{}, errors.New("No Image for this package")
+	}
+
+	return image, nil
+}
+
+func GetTotalImageByPackageId(packageId int) int {
+	var count int
+	if err := DB.Model(&Image{}).Where("package_id = ?", packageId).Count(&count).Error; err != nil {
+		return 0
+	}
+
+	return count
 }

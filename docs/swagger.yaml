@@ -7,6 +7,22 @@ definitions:
     required:
     - relativeId
     type: object
+  controllers.CreatePackageDTO:
+    properties:
+      packageName:
+        type: string
+    required:
+    - packageName
+    type: object
+  controllers.GetPackageResponse:
+    properties:
+      packages:
+        items:
+          $ref: '#/definitions/controllers.PackageResponse'
+        type: array
+      totalItems:
+        type: integer
+    type: object
   controllers.LoginDTO:
     properties:
       password:
@@ -21,6 +37,17 @@ definitions:
     properties:
       token:
         type: string
+    type: object
+  controllers.PackageResponse:
+    properties:
+      id:
+        type: integer
+      packageName:
+        type: string
+      totalImages:
+        type: integer
+      userId:
+        type: integer
     type: object
   controllers.RegisterDTO:
     properties:
@@ -73,6 +100,23 @@ definitions:
       id:
         type: integer
       imageUrl:
+        type: string
+      packageId:
+        type: string
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+    type: object
+  models.Package:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      packageName:
         type: string
       updatedAt:
         type: string
@@ -195,6 +239,11 @@ paths:
   /api/image:
     get:
       description: get upload image of user and family member
+      parameters:
+      - description: Package ID
+        in: query
+        name: packageId
+        type: string
       produces:
       - application/json
       responses:
@@ -212,11 +261,16 @@ paths:
     post:
       description: upload image
       parameters:
-      - description: file
+      - description: File
         in: formData
         name: file
         required: true
         type: file
+      - description: Package Id
+        in: formData
+        name: packageId
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -229,6 +283,49 @@ paths:
       summary: image
       tags:
       - image
+  /api/package:
+    get:
+      description: get package of current user
+      parameters:
+      - description: User Id
+        in: query
+        name: userId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.GetPackageResponse'
+      security:
+      - Bearer: []
+      summary: package
+      tags:
+      - package
+    post:
+      consumes:
+      - application/json
+      description: create package
+      parameters:
+      - description: Package Info
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreatePackageDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Package'
+      security:
+      - Bearer: []
+      summary: package
+      tags:
+      - package
   /api/profile:
     get:
       description: get user profile

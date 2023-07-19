@@ -25,7 +25,7 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
+// host localhost:8080
 // @host 54.238.205.73
 // @BasePath /api
 
@@ -53,6 +53,8 @@ func main() {
 	api.POST("/family", controllers.AddRelationship)
 	api.GET("/image", controllers.GetImage)
 	api.POST("/image", controllers.UploadImage)
+	api.GET("/package", controllers.GetPackage)
+	api.POST("/package", controllers.CreatePackage)
 
 	// sess := storage.ConnectAws()
 	// image := r.Group("/api/image")

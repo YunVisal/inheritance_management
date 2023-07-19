@@ -173,6 +173,14 @@ const docTemplate = `{
                     "image"
                 ],
                 "summary": "image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Package ID",
+                        "name": "packageId",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -202,8 +210,15 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "file",
-                        "description": "file",
+                        "description": "File",
                         "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Package Id",
+                        "name": "packageId",
                         "in": "formData",
                         "required": true
                     }
@@ -213,6 +228,76 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Image"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/package": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "get package of current user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "package"
+                ],
+                "summary": "package",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User Id",
+                        "name": "userId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPackageResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "create package",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "package"
+                ],
+                "summary": "package",
+                "parameters": [
+                    {
+                        "description": "Package Info",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.CreatePackageDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Package"
                         }
                     }
                 }
@@ -292,6 +377,31 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.CreatePackageDTO": {
+            "type": "object",
+            "required": [
+                "packageName"
+            ],
+            "properties": {
+                "packageName": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.GetPackageResponse": {
+            "type": "object",
+            "properties": {
+                "packages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.PackageResponse"
+                    }
+                },
+                "totalItems": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.LoginDTO": {
             "type": "object",
             "required": [
@@ -312,6 +422,23 @@ const docTemplate = `{
             "properties": {
                 "token": {
                     "type": "string"
+                }
+            }
+        },
+        "controllers.PackageResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "packageName": {
+                    "type": "string"
+                },
+                "totalImages": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
                 }
             }
         },
@@ -392,6 +519,32 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "imageUrl": {
+                    "type": "string"
+                },
+                "packageId": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Package": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "packageName": {
                     "type": "string"
                 },
                 "updatedAt": {
